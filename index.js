@@ -1,8 +1,7 @@
 const botconfig = require("./botconfig.json");
 const Discord = require("discord.js");
 const fs = require("fs");
-const bot = new Discord.Client({disableEveryone: true});
-const token = "NDY0OTgwMTM5Mjc3ODExNzEy.DiG2bA.YbLEd7vsSbMMzPXW57n9qsmFGME"
+const bot = new Discord.Client({disableEveryone: false});
 bot.commands = new Discord.Collection();
 
 
@@ -57,7 +56,7 @@ bot.on("channelCreate", async channel => {
 bot.on("channelDelete", async channel => {
   console.log(`${channel.name} has been deleted!`)
 
-  let sChannel = channel.guild.channels.find(`name`, "logs");
+  let sChannel = channel.guild.channels.find(`name`, "log-book");
   sChannel.send(`${channel.name} has been deleted!.`);
 });
 
@@ -66,14 +65,7 @@ bot.on("message", async message => {
   if(message.author.bot) return;
   if(message.channel.type === "dm") return;
 
-  let prefixes = JSON.parse(fs.readFileSync("./prefixes.json", "utf8"));
-  if(!prefixes[message.guild.id]){
-    prefixes[message.guild.id] = {
-      prefixes: botconfig.prefix
-    };
-  }
-
-  let prefix = prefixes[message.guild.id].prefixes;
+  let prefix = botconfig.prefix
   let messageArray = message.content.split(" ");
   let cmd = messageArray[0];
   let args = messageArray.slice(1);
@@ -87,4 +79,4 @@ bot.on("message", async message => {
 
 
 
- bot.login(token)
+bot.login(botconfig.token);
